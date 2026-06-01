@@ -1,0 +1,13 @@
+{
+  "name": "chuangminchung",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static portfolio site for painter 莊明中 (Chuang Ming-Chung). Precompiles .jsx → .js so no in-browser Babel is needed.",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7",
+    "@babel/preset-react": "^7"
+  }
+}
