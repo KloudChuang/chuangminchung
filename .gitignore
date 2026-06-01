@@ -1,0 +1,10 @@
+# 工作檔 / 非網站資源（不需上傳）
+uploads/
+*.docx
+.thumbnail
+
+# macOS 系統檔
+.DS_Store
+
+# 套件 / 相依
+node_modules/
