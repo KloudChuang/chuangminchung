@@ -569,6 +569,10 @@ footer.foot{ border-top:1px solid var(--hairline); margin-top:40px;
   .lb-nav{ display:none; }
 }
 @media(max-width:560px){
+  .nav-inner{ gap:14px; }
+  .brand{ flex-direction:column; align-items:flex-start; gap:1px; }
+  .brand .zh{ font-size:20px; letter-spacing:.14em; white-space:nowrap; }
+  .brand .en{ font-size:9.5px; letter-spacing:.18em; }
   .masonry{ columns:1; }
   .featured-strip{ grid-template-columns:1fr 1fr; }
   .featured-strip .tile{ grid-column:span 1 !important; aspect-ratio:1/1 !important; }
