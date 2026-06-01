@@ -2,6 +2,7 @@
 uploads/
 *.docx
 .thumbnail
+PUSH.md
 
 # macOS 系統檔
 .DS_Store
