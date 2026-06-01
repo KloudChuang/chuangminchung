@@ -258,7 +258,7 @@ function About({ lang }) {
       <div className="section" style={{ paddingBottom: 0 }}>
         <SectionHead eyebrow={lang === "zh" ? "創作足跡 · Journeys" : "Journeys"}
           title={t(A.journeyTitle, lang)} lang={lang} />
-        <div className="thumbrow reveal" style={{ gridTemplateColumns: "repeat(4,1fr)" }}>
+        <div className="thumbrow reveal">
           {A.journey.map((j, i) => (
             <div className="t" key={i} title={t(j, lang)}>
               <img src={IMG(j.img)} alt={t(j, lang)} loading="lazy" />
@@ -351,6 +351,24 @@ function Exhibitions({ lang, openLightbox }) {
         <div className="poster" style={{ order: 2 }}><img src={IMG(E.second.img)} alt={(lang === "zh" ? E.second.titleZh : E.second.titleEn) + "｜展覽海報"} /></div>
       </div>
 
+      {/* crowd / scale gallery */}
+      <div className="section" style={{ paddingBottom: 0 }}>
+        <SectionHead eyebrow={lang === "zh" ? "現場盛況 · Crowds" : "Opening Crowds"}
+          title={t(E.crowdTitle, lang)} lead={t(E.crowdLead, lang)} lang={lang} />
+        <div className="crowd-grid">
+          {E.crowd.map((c, i) => {
+            const lbItems = E.crowd.map((x) => ({ img: x.img, zh: x.zh, en: x.en, series: { zh: "展覽現場盛況", en: "Opening Crowds & Scale" }, note: { zh: "", en: "" } }));
+            return (
+              <div className={"crowd-card reveal" + (i === 0 ? " lead" : "")} key={c.img}
+                onClick={() => openLightbox(lbItems, i)} title={t(c, lang)}>
+                <img src={IMG(c.img)} alt={t(c, lang)} loading="lazy" />
+                <div className="crowd-cap"><span>{t(c, lang)}</span></div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* timeline list */}
       <div className="section" style={{ paddingBottom: 30 }}>
         <SectionHead eyebrow={lang === "zh" ? "歷年展覽 · Timeline" : "Timeline"}
@@ -372,7 +390,7 @@ function Exhibitions({ lang, openLightbox }) {
       <div className="section" style={{ paddingTop: 10 }}>
         <SectionHead eyebrow={lang === "zh" ? "現場紀實 · Gallery" : "In the Gallery"}
           title={t(E.galleryTitle, lang)} lang={lang} />
-        <div className="thumbrow reveal" style={{ gridTemplateColumns: "repeat(4,1fr)" }}>
+        <div className="thumbrow reveal">
           {E.gallery.map((g, gi) => {
             const lbItems = E.gallery.map((x) => ({ img: x.img, zh: x.zh, en: x.en, series: { zh: "展覽與創作現場", en: "Exhibitions & Studio" }, note: { zh: "", en: "" } }));
             return (
@@ -407,20 +425,63 @@ function Academic({ lang }) {
         ))}
       </div>
 
-      <div style={{ display: "grid", gap: 18 }}>
-        {AC.blocks.map((b, i) => (
-          <div className="glass reveal" key={i}
-            style={{ display: "grid", gridTemplateColumns: i % 2 ? "1.3fr 0.7fr" : "0.7fr 1.3fr", gap: 0, overflow: "hidden", borderRadius: 20 }}>
-            <div style={{ order: i % 2 ? 2 : 1, padding: "clamp(28px,3.5vw,46px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div className="eyebrow">{lang === "zh" ? b.title.en : b.title.zh}</div>
-              <h3 style={{ color: "var(--foam)", fontSize: "clamp(22px,2.4vw,30px)", margin: "4px 0 14px", letterSpacing: ".04em" }}>{t(b.title, lang)}</h3>
-              <p style={{ color: "var(--text-dim)", fontSize: 16, margin: 0 }}>{t(b.body, lang)}</p>
+      {/* wide feature photo (no cramped cropping) */}
+      <div className="acad-feature reveal r-scale">
+        <img src={IMG(AC.feature.img)} alt={lang === "zh" ? AC.feature.capZh : AC.feature.capEn} loading="lazy" />
+        <div className="veil"></div>
+        <div className="cap">{lang === "zh" ? AC.feature.capZh : AC.feature.capEn}</div>
+      </div>
+
+      {/* role cards — icons, no photo cropping */}
+      <div className="section" style={{ paddingBottom: 0 }}>
+        <SectionHead eyebrow={lang === "zh" ? "評審與顧問 · Roles" : "Jury & Advisory"}
+          title={t(AC.rolesTitle, lang)} lang={lang} />
+        <div className="role-grid">
+          {AC.blocks.map((b, i) => (
+            <div className="role-card glass reveal" key={i} style={{ transitionDelay: (i * 70) + "ms" }}>
+              <div className="role-ic">{b.ic}</div>
+              <div className="role-en">{lang === "zh" ? b.title.en : b.title.zh}</div>
+              <h3>{t(b.title, lang)}</h3>
+              <p>{t(b.body, lang)}</p>
             </div>
-            <div style={{ order: i % 2 ? 1 : 2, position: "relative", minHeight: 240, overflow: "hidden" }}>
-              <img src={IMG(b.img)} alt={(lang === "zh" ? t(b.title, lang) + "｜莊明中" : t(b.title, lang) + " — Chuang Ming-Chung")} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+          ))}
+        </div>
+      </div>
+
+      {/* public collections */}
+      <div className="section" style={{ paddingBottom: 0 }}>
+        <SectionHead eyebrow={lang === "zh" ? "公共典藏 · Collections" : "Collections"}
+          title={t(AC.collectionsTitle, lang)} lead={t(AC.collectionsLead, lang)} lang={lang} />
+        <div className="coll-grid reveal">
+          {AC.collections.map((c, i) => (
+            <div className="coll-item" key={i}>
+              <span className="dot"></span>
+              <div>
+                <div className="zh">{t(c, lang)}</div>
+                <div className="en">{lang === "zh" ? c.en : c.zh}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      {/* academic exchange & lectures */}
+      <div className="section" style={{ paddingBottom: 0 }}>
+        <SectionHead eyebrow={lang === "zh" ? "學術交流 · Exchange" : "Exchange"}
+          title={t(AC.exchangeTitle, lang)} lead={t(AC.exchangeLead, lang)} lang={lang} />
+        <div className="exchange-grid">
+          {AC.exchange.map((e, i) => (
+            <div className={"exch-card glass reveal" + (i === 0 ? " feature" : "")} key={i} style={{ transitionDelay: (i % 2 * 80) + "ms" }}>
+              <div className="exch-photo">
+                <img src={IMG(e.img)} alt={t(e.title, lang)} loading="lazy" />
+              </div>
+              <div className="exch-body">
+                <h3>{t(e.title, lang)}</h3>
+                <p>{t(e.body, lang)}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* critical acclaim */}
