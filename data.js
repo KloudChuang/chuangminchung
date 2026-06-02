@@ -3,7 +3,7 @@
    Source: 莊明中網站資料庫 (artworks_database.json) + 展覽海報
    ========================================================= */
 window.SITE = {
-  brand: { zh: "莊明中", en: "Chuang Ming-Chung", role: { zh:"當代油畫藝術家", en:"Contemporary Painter" } },
+  brand: { zh: "莊明中", en: "Chuang Min-Chung", role: { zh:"當代油畫藝術家", en:"Contemporary Painter" } },
 
   nav: [
     { id:"home",    zh:"首頁",   en:"Home" },
@@ -30,7 +30,7 @@ window.SITE = {
   about: {
     intro: {
       zh: "莊明中教授是台灣當代藝術界的中流砥柱，其創作與教育貢獻深遠影響台灣藝術發展。作為國立台中教育大學美術學系專任教授，他不僅培育眾多藝術人才，更以獨特的藝術語言為台灣藝壇注入新的活力。",
-      en: "Professor Chuang Ming-Chung is a pivotal figure in Taiwan's contemporary art scene, whose creative practice and dedication to education have profoundly shaped its development. As a full professor in the Department of Fine Arts at National Taichung University of Education, he has nurtured a generation of artists while infusing the field with a singular visual language."
+      en: "Professor Chuang Min-Chung is a pivotal figure in Taiwan's contemporary art scene, whose creative practice and dedication to education have profoundly shaped its development. As a full professor in the Department of Fine Arts at National Taichung University of Education, he has nurtured a generation of artists while infusing the field with a singular visual language."
     },
     paras: {
       zh: [
@@ -136,7 +136,7 @@ window.SITE = {
     featured: {
       img:"poster_sealight",
       titleZh:"海底射來的光 —— 莊明中 2025 油畫創作展",
-      titleEn:"Light from the Sea Floor — Chuang Ming-Chung 2025 Oil Painting Exhibition",
+      titleEn:"Light from the Sea Floor — Chuang Min-Chung 2025 Oil Painting Exhibition",
       descZh:"六十七件作品，宛如「海底射來的光」，穿越濾光的層層水域，在幽微與閃耀之間，映照出莊明中四十年的創作軌跡。藝評家謝里法譽為「像剛打開的珍珠寶盒」，少見而珍貴。",
       descEn:"Sixty-seven works, like 'light from the sea floor,' pass through filtering layers of water — between the faint and the radiant, they mirror forty years of Chuang's practice. Critic Shaih Lifa called it 'a pearl casket just opened' — rare and precious.",
       info:[
@@ -150,7 +150,7 @@ window.SITE = {
     second: {
       img:"poster_heartsea",
       titleZh:"心海凝視 —— 莊明中油畫創作展",
-      titleEn:"Gazing at the Heart-Sea — Chuang Ming-Chung Oil Painting Exhibition",
+      titleEn:"Gazing at the Heart-Sea — Chuang Min-Chung Oil Painting Exhibition",
       descZh:"海洋議題一直是莊明中的創作主題。此次展覽源於作者先天兩千三百度的高度近視——雖然看待世界很模糊，卻比別人看見更多的變化。前一年因視網膜剝離而靜養沉思，他開始描繪自我內心變動的風景，成為這次個展的主題「心海凝視」。",
       descEn:"The ocean has always been Chuang's theme. This show grew from his congenital extreme myopia (–2300 diopters): though the world appears blurred, he sees more change than others. After a year recovering from a retinal detachment, he began to paint the shifting landscape within — the theme of this exhibition.",
       info:[

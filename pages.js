@@ -13,9 +13,9 @@ const THEME_REP = {
 const MARQUEE_A = ["art18", "art12", "art42", "art33", "art20", "art04", "art29", "art13"];
 const MARQUEE_B = ["art30", "art22", "art47", "art39", "art17", "art09", "art40", "art57"];
 function altWork(w, lang) {
-  if (!w) return lang === "zh" ? "莊明中油畫作品" : "Painting by Chuang Ming-Chung";
+  if (!w) return lang === "zh" ? "莊明中油畫作品" : "Painting by Chuang Min-Chung";
   const other = lang === "zh" ? w.en : w.zh;
-  return lang === "zh" ? `${w.zh}（${w.en}），${w.yr}　莊明中油畫作品` : `${w.en} (${w.zh}), ${w.yr} — painting by Chuang Ming-Chung`;
+  return lang === "zh" ? `${w.zh}（${w.en}），${w.yr}　莊明中油畫作品` : `${w.en} (${w.zh}), ${w.yr} — painting by Chuang Min-Chung`;
 }
 function Home({
   lang,
@@ -96,7 +96,7 @@ function Home({
     "data-par": "2"
   }, React.createElement("img", {
     src: IMG("p19"),
-    alt: lang === "zh" ? "莊明中肖像——台灣當代油畫藝術家" : "Portrait of Chuang Ming-Chung, contemporary Taiwanese painter"
+    alt: lang === "zh" ? "莊明中肖像——台灣當代油畫藝術家" : "Portrait of Chuang Min-Chung, contemporary Taiwanese painter"
   })), React.createElement("div", {
     className: "hero-float",
     "data-par": "-2"
@@ -144,7 +144,7 @@ function Home({
     className: "accent"
   }, "light and colour"), ",", React.createElement("br", null), "gazing at the ocean, the butterflies, ancient worlds \u2014 the beauty of all things.")), React.createElement("div", {
     className: "sub reveal"
-  }, lang === "zh" ? "Chuang Ming-Chung · 莊明中" : "凝神靜氣，描繪萬象之美")), React.createElement("section", {
+  }, lang === "zh" ? "Chuang Min-Chung · 莊明中" : "凝神靜氣，描繪萬象之美")), React.createElement("section", {
     className: "section wrap",
     style: {
       paddingTop: 0
@@ -208,7 +208,7 @@ function Home({
     }
   }, React.createElement("img", {
     src: IMG(THEME_REP[c.id]),
-    alt: (lang === "zh" ? c.zh + " 系列代表作品" : c.en + " series — representative work") + "｜莊明中 Chuang Ming-Chung",
+    alt: (lang === "zh" ? c.zh + " 系列代表作品" : c.en + " series — representative work") + "｜莊明中 Chuang Min-Chung",
     loading: "lazy"
   }), React.createElement("div", {
     className: "lab"
@@ -353,7 +353,7 @@ function About({
     className: "portrait-card"
   }, React.createElement("img", {
     src: IMG("p39"),
-    alt: lang === "zh" ? "莊明中藝術家肅像" : "Portrait of the artist Chuang Ming-Chung"
+    alt: lang === "zh" ? "莊明中藝術家肅像" : "Portrait of the artist Chuang Min-Chung"
   })), React.createElement("div", {
     className: "glass",
     style: {
@@ -891,7 +891,7 @@ function Contact({
     className: "portrait-card"
   }, React.createElement("img", {
     src: IMG(C.img),
-    alt: lang === "zh" ? "莊明中於工作室進行創作" : "Chuang Ming-Chung at work in the studio"
+    alt: lang === "zh" ? "莊明中於工作室進行創作" : "Chuang Min-Chung at work in the studio"
   })))));
 }
 Object.assign(window, {

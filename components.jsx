@@ -135,7 +135,7 @@ function Footer({ lang, go }) {
             <span className="en">{S.brand.en}</span>
           </div>
           <div className="sig" style={{ marginTop: 12, maxWidth: "42ch" }}>{t(S.footer.sig, lang)}</div>
-          <div className="sig" style={{ marginTop: 8, opacity: .7 }}>© {new Date().getFullYear()} {S.brand.zh} Chuang Ming-Chung · chuangminchung.com</div>
+          <div className="sig" style={{ marginTop: 8, opacity: .7 }}>© {new Date().getFullYear()} {S.brand.zh} Chuang Min-Chung · chuangminchung.com</div>
         </div>
         <div className="social">
           {S.contact.lines.map((l, i) => (

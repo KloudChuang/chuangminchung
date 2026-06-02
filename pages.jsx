@@ -10,11 +10,11 @@ const MARQUEE_B = ["art30", "art22", "art47", "art39", "art17", "art09", "art40"
 
 /* descriptive alt text for an artwork (SEO) */
 function altWork(w, lang) {
-  if (!w) return lang === "zh" ? "莊明中油畫作品" : "Painting by Chuang Ming-Chung";
+  if (!w) return lang === "zh" ? "莊明中油畫作品" : "Painting by Chuang Min-Chung";
   const other = lang === "zh" ? w.en : w.zh;
   return lang === "zh"
     ? `${w.zh}（${w.en}），${w.yr}　莊明中油畫作品`
-    : `${w.en} (${w.zh}), ${w.yr} — painting by Chuang Ming-Chung`;
+    : `${w.en} (${w.zh}), ${w.yr} — painting by Chuang Min-Chung`;
 }
 
 function Home({ lang, go, openLightbox }) {
@@ -61,7 +61,7 @@ function Home({ lang, go, openLightbox }) {
           </div>
           <div className="hero-portrait">
             <div className="glow"></div>
-            <div className="frame" data-par="2"><img src={IMG("p19")} alt={lang === "zh" ? "莊明中肖像——台灣當代油畫藝術家" : "Portrait of Chuang Ming-Chung, contemporary Taiwanese painter"} /></div>
+            <div className="frame" data-par="2"><img src={IMG("p19")} alt={lang === "zh" ? "莊明中肖像——台灣當代油畫藝術家" : "Portrait of Chuang Min-Chung, contemporary Taiwanese painter"} /></div>
             <div className="hero-float" data-par="-2"><img src={IMG("art29")} alt={altWork(byImg("art29"), lang)} /></div>
           </div>
         </div>
@@ -94,7 +94,7 @@ function Home({ lang, go, openLightbox }) {
             ? <>四十年來，在流動的<span className="accent">光與色</span>之間，<br />凝視海洋、蝶舞、古文明與萬象之美。</>
             : <>For forty years, between flowing <span className="accent">light and colour</span>,<br />gazing at the ocean, the butterflies, ancient worlds — the beauty of all things.</>}
         </p>
-        <div className="sub reveal">{lang === "zh" ? "Chuang Ming-Chung · 莊明中" : "凝神靜氣，描繪萬象之美"}</div>
+        <div className="sub reveal">{lang === "zh" ? "Chuang Min-Chung · 莊明中" : "凝神靜氣，描繪萬象之美"}</div>
       </section>
 
       {/* featured works strip */}
@@ -137,7 +137,7 @@ function Home({ lang, go, openLightbox }) {
           {themes.map((c) => (
             <div className="theme reveal r-scale" key={c.id}
               onClick={() => { window.__worksCat = c.id; go("works"); }}>
-              <img src={IMG(THEME_REP[c.id])} alt={(lang === "zh" ? c.zh + " 系列代表作品" : c.en + " series — representative work") + "｜莊明中 Chuang Ming-Chung"} loading="lazy" />
+              <img src={IMG(THEME_REP[c.id])} alt={(lang === "zh" ? c.zh + " 系列代表作品" : c.en + " series — representative work") + "｜莊明中 Chuang Min-Chung"} loading="lazy" />
               <div className="lab">
                 <span className="zh">{t(c, lang)}</span>
                 <span className="en">{lang === "zh" ? c.en : c.zh}</span>
@@ -219,7 +219,7 @@ function About({ lang }) {
         title={lang === "zh" ? "台灣當代藝術的中流砥柱" : "A Pillar of Taiwan's Contemporary Art"} lang={lang} />
       <div className="split">
         <div className="reveal">
-          <div className="portrait-card"><img src={IMG("p39")} alt={lang === "zh" ? "莊明中藝術家肅像" : "Portrait of the artist Chuang Ming-Chung"} /></div>
+          <div className="portrait-card"><img src={IMG("p39")} alt={lang === "zh" ? "莊明中藝術家肅像" : "Portrait of the artist Chuang Min-Chung"} /></div>
           <div className="glass" style={{ padding: 26, marginTop: 18 }}>
             <div className="eyebrow" style={{ marginBottom: 14 }}>{t(A.education.title, lang)}</div>
             <div className="timeline">
@@ -575,7 +575,7 @@ function Contact({ lang }) {
           </div>
         </div>
         <div className="reveal">
-          <div className="portrait-card"><img src={IMG(C.img)} alt={lang === "zh" ? "莊明中於工作室進行創作" : "Chuang Ming-Chung at work in the studio"} /></div>
+          <div className="portrait-card"><img src={IMG(C.img)} alt={lang === "zh" ? "莊明中於工作室進行創作" : "Chuang Min-Chung at work in the studio"} /></div>
         </div>
       </div>
     </div>

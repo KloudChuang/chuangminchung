@@ -200,7 +200,7 @@ function Footer({
       marginTop: 8,
       opacity: .7
     }
-  }, "\xA9 ", new Date().getFullYear(), " ", S.brand.zh, " Chuang Ming-Chung \xB7 chuangminchung.com")), React.createElement("div", {
+  }, "\xA9 ", new Date().getFullYear(), " ", S.brand.zh, " Chuang Min-Chung \xB7 chuangminchung.com")), React.createElement("div", {
     className: "social"
   }, S.contact.lines.map((l, i) => React.createElement("a", {
     key: i,
