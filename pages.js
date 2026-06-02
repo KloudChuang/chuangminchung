@@ -1,7 +1,8 @@
 /* AUTO-GENERATED from pages.jsx by build.js — do not edit; edit the .jsx and run "npm run build". */
 const {
   useState: uS,
-  useEffect: uE
+  useEffect: uE,
+  useRef: uR
 } = React;
 const THEME_REP = {
   ocean: "art18",
@@ -16,6 +17,106 @@ function altWork(w, lang) {
   if (!w) return lang === "zh" ? "莊明中油畫作品" : "Painting by Chuang Min-Chung";
   const other = lang === "zh" ? w.en : w.zh;
   return lang === "zh" ? `${w.zh}（${w.en}），${w.yr}　莊明中油畫作品` : `${w.en} (${w.zh}), ${w.yr} — painting by Chuang Min-Chung`;
+}
+function VoyageGuide({
+  lang,
+  go
+}) {
+  const secRef = uR(null);
+  const pathRef = uR(null);
+  uE(() => {
+    const sec = secRef.current,
+      path = pathRef.current;
+    if (!sec || !path) return;
+    let raf = 0;
+    const apply = () => {
+      const r = sec.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (vh * 0.82 - r.top) / r.height));
+      path.style.strokeDashoffset = (1 - p).toFixed(4);
+      raf = 0;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+    window.addEventListener("scroll", onScroll, {
+      passive: true
+    });
+    window.addEventListener("resize", onScroll);
+    apply();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+  const G = window.SITE.guide;
+  return React.createElement("section", {
+    className: "section wrap",
+    style: {
+      paddingTop: 0
+    }
+  }, React.createElement(SectionHead, {
+    center: true,
+    eyebrow: lang === "zh" ? "網站導覽 · Explore" : "Explore the Site",
+    title: t(G.title, lang),
+    lead: t(G.lead, lang),
+    lang: lang
+  }), React.createElement("div", {
+    className: "guide",
+    ref: secRef
+  }, React.createElement("svg", {
+    className: "gline",
+    viewBox: "0 0 60 1200",
+    preserveAspectRatio: "none",
+    "aria-hidden": "true"
+  }, React.createElement("defs", null, React.createElement("linearGradient", {
+    id: "routeGrad",
+    x1: "0",
+    y1: "0",
+    x2: "0",
+    y2: "1"
+  }, React.createElement("stop", {
+    offset: "0",
+    stopColor: "#e8c07a"
+  }), React.createElement("stop", {
+    offset: "1",
+    stopColor: "#7ec8e3"
+  }))), React.createElement("path", {
+    ref: pathRef,
+    pathLength: "1",
+    d: "M30 0 C46 70 14 140 30 210 S46 350 30 420 S14 560 30 630 S46 770 30 840 S14 980 30 1050 S46 1160 30 1200",
+    fill: "none",
+    stroke: "url(#routeGrad)",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    style: {
+      strokeDasharray: 1,
+      strokeDashoffset: 1
+    }
+  })), G.items.map((g, i) => React.createElement("div", {
+    className: "gstop reveal " + (i % 2 ? "r-right right" : "r-left"),
+    key: g.id,
+    onClick: () => go(g.id)
+  }, React.createElement("div", {
+    className: "gcard glass"
+  }, React.createElement("div", {
+    className: "gimg"
+  }, React.createElement("img", {
+    src: IMG(g.img),
+    alt: t(g, lang),
+    loading: "lazy"
+  })), React.createElement("div", {
+    className: "gbody"
+  }, React.createElement("div", {
+    className: "gnum"
+  }, "0", i + 1), React.createElement("h3", null, t(g, lang)), React.createElement("div", {
+    className: "gen"
+  }, lang === "zh" ? g.en : g.zh), React.createElement("p", null, t(g.d, lang)), React.createElement("span", {
+    className: "glink"
+  }, lang === "zh" ? "前往" : "Visit", " ", React.createElement("span", null, "\u2192")))), React.createElement("span", {
+    className: "gdot"
+  })))));
 }
 function Home({
   lang,
@@ -135,7 +236,8 @@ function Home({
     alt: altWork(byImg(id), lang),
     loading: "lazy"
   })))))), React.createElement("section", {
-    className: "wrap statement"
+    className: "wrap statement",
+    "data-par": "1"
   }, React.createElement("p", {
     className: "big reveal r-rise"
   }, lang === "zh" ? React.createElement(React.Fragment, null, "\u56DB\u5341\u5E74\u4F86\uFF0C\u5728\u6D41\u52D5\u7684", React.createElement("span", {
@@ -161,7 +263,7 @@ function Home({
     const span = [5, 4, 3, 4, 4, 4][i];
     const tall = i === 0;
     return React.createElement("div", {
-      className: "tile reveal r-scale",
+      className: "tile reveal r-scale r-blur",
       key: id,
       style: {
         gridColumn: `span ${span}`,
@@ -200,7 +302,7 @@ function Home({
   }), React.createElement("div", {
     className: "themes"
   }, themes.map(c => React.createElement("div", {
-    className: "theme reveal r-scale",
+    className: "theme reveal r-scale r-blur",
     key: c.id,
     onClick: () => {
       window.__worksCat = c.id;
@@ -298,7 +400,10 @@ function Home({
   }, t(S.exhibitions.featured.info[0].v, lang), " \xB7 ", t(S.exhibitions.featured.info[1].v, lang))), React.createElement("button", {
     className: "btn",
     onClick: () => go("exhibitions")
-  }, lang === "zh" ? "展覽詳情" : "Details", " ", React.createElement("span", null, "\u2192")))), React.createElement("section", {
+  }, lang === "zh" ? "展覽詳情" : "Details", " ", React.createElement("span", null, "\u2192")))), React.createElement(VoyageGuide, {
+    lang: lang,
+    go: go
+  }), React.createElement("section", {
     className: "section wrap",
     style: {
       paddingTop: 0
@@ -338,6 +443,7 @@ function About({
   lang
 }) {
   useReveal();
+  useParallax();
   const A = window.SITE.about;
   return React.createElement("div", {
     className: "page wrap section"
@@ -350,7 +456,7 @@ function About({
   }, React.createElement("div", {
     className: "reveal"
   }, React.createElement("div", {
-    className: "portrait-card"
+    className: "portrait-card reveal r-clip"
   }, React.createElement("img", {
     src: IMG("p39"),
     alt: lang === "zh" ? "莊明中藝術家肅像" : "Portrait of the artist Chuang Min-Chung"
@@ -460,7 +566,7 @@ function Works({
   }, lang === "zh" ? c.en : c.zh)))), React.createElement("div", {
     className: "masonry"
   }, filtered.map(wk => React.createElement("div", {
-    className: "card reveal",
+    className: "card reveal r-blur",
     key: wk.img,
     onClick: () => openLightbox(filtered, filtered.indexOf(wk))
   }, React.createElement("img", {
@@ -482,6 +588,7 @@ function Exhibitions({
   openLightbox
 }) {
   useReveal();
+  useParallax();
   const E = window.SITE.exhibitions;
   const F = E.featured;
   return React.createElement("div", {
@@ -493,10 +600,11 @@ function Exhibitions({
   }), React.createElement("div", {
     className: "news-feature glass reveal"
   }, React.createElement("div", {
-    className: "poster"
+    className: "poster reveal r-clip"
   }, React.createElement("img", {
     src: IMG(F.img),
-    alt: (lang === "zh" ? F.titleZh : F.titleEn) + "｜展覽海報"
+    alt: (lang === "zh" ? F.titleZh : F.titleEn) + "｜展覽海報",
+    "data-par": "1.2"
   })), React.createElement("div", {
     className: "body"
   }, React.createElement("span", {
@@ -549,13 +657,14 @@ function Exhibitions({
   }, t(r.k, lang)), React.createElement("div", {
     className: "v"
   }, t(r.v, lang)))))), React.createElement("div", {
-    className: "poster",
+    className: "poster reveal r-clip",
     style: {
       order: 2
     }
   }, React.createElement("img", {
     src: IMG(E.second.img),
-    alt: (lang === "zh" ? E.second.titleZh : E.second.titleEn) + "｜展覽海報"
+    alt: (lang === "zh" ? E.second.titleZh : E.second.titleEn) + "｜展覽海報",
+    "data-par": "-1.2"
   }))), React.createElement("div", {
     className: "section",
     style: {
@@ -583,7 +692,7 @@ function Exhibitions({
       }
     }));
     return React.createElement("div", {
-      className: "crowd-card reveal" + (i === 0 ? " lead" : ""),
+      className: "crowd-card reveal r-blur" + (i === 0 ? " lead" : ""),
       key: c.img,
       onClick: () => openLightbox(lbItems, i),
       title: t(c, lang)
@@ -659,6 +768,7 @@ function Academic({
   lang
 }) {
   useReveal();
+  useParallax();
   const AC = window.SITE.academic;
   return React.createElement("div", {
     className: "page wrap section"
@@ -682,10 +792,11 @@ function Academic({
   }, t(s, lang)), React.createElement("div", {
     className: "en"
   }, lang === "zh" ? s.en : s.zh)))), React.createElement("div", {
-    className: "acad-feature reveal r-scale"
+    className: "acad-feature reveal r-clip"
   }, React.createElement("img", {
     src: IMG(AC.feature.img),
     alt: lang === "zh" ? AC.feature.capZh : AC.feature.capEn,
+    "data-par": "1.5",
     loading: "lazy"
   }), React.createElement("div", {
     className: "veil"
@@ -746,7 +857,7 @@ function Academic({
   }), React.createElement("div", {
     className: "exchange-grid"
   }, AC.exchange.map((e, i) => React.createElement("div", {
-    className: "exch-card glass reveal" + (i === 0 ? " feature" : ""),
+    className: "exch-card glass reveal r-blur" + (i === 0 ? " feature" : ""),
     key: i,
     style: {
       transitionDelay: i % 2 * 80 + "ms"
@@ -888,7 +999,7 @@ function Contact({
   }, l.v)))))), React.createElement("div", {
     className: "reveal"
   }, React.createElement("div", {
-    className: "portrait-card"
+    className: "portrait-card reveal r-clip"
   }, React.createElement("img", {
     src: IMG(C.img),
     alt: lang === "zh" ? "莊明中於工作室進行創作" : "Chuang Min-Chung at work in the studio"

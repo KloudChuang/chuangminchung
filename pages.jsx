@@ -1,7 +1,7 @@
 /* =========================================================
    PAGES
    ========================================================= */
-const { useState: uS, useEffect: uE } = React;
+const { useState: uS, useEffect: uE, useRef: uR } = React;
 
 /* ---------------- HOME ---------------- */
 const THEME_REP = { ocean: "art18", butterfly: "art12", folk: "art42", ancient: "art57", rebirth: "art01" };
@@ -15,6 +15,68 @@ function altWork(w, lang) {
   return lang === "zh"
     ? `${w.zh}（${w.en}），${w.yr}　莊明中油畫作品`
     : `${w.en} (${w.zh}), ${w.yr} — painting by Chuang Min-Chung`;
+}
+
+/* ---- voyage guide: animated site map — a glowing route drawn by scroll,
+        one "island" stop per page of the site ---- */
+function VoyageGuide({ lang, go }) {
+  const secRef = uR(null);
+  const pathRef = uR(null);
+  uE(() => {
+    const sec = secRef.current, path = pathRef.current;
+    if (!sec || !path) return;
+    let raf = 0;
+    const apply = () => {
+      const r = sec.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // route draws as the section scrolls through the viewport
+      const p = Math.min(1, Math.max(0, (vh * 0.82 - r.top) / r.height));
+      path.style.strokeDashoffset = (1 - p).toFixed(4);
+      raf = 0;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    apply();
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); cancelAnimationFrame(raf); };
+  }, []);
+  const G = window.SITE.guide;
+  return (
+    <section className="section wrap" style={{ paddingTop: 0 }}>
+      <SectionHead center
+        eyebrow={lang === "zh" ? "網站導覽 · Explore" : "Explore the Site"}
+        title={t(G.title, lang)} lead={t(G.lead, lang)} lang={lang} />
+      <div className="guide" ref={secRef}>
+        <svg className="gline" viewBox="0 0 60 1200" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="routeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#e8c07a" />
+              <stop offset="1" stopColor="#7ec8e3" />
+            </linearGradient>
+          </defs>
+          <path ref={pathRef} pathLength="1"
+            d="M30 0 C46 70 14 140 30 210 S46 350 30 420 S14 560 30 630 S46 770 30 840 S14 980 30 1050 S46 1160 30 1200"
+            fill="none" stroke="url(#routeGrad)" strokeWidth="2" strokeLinecap="round"
+            style={{ strokeDasharray: 1, strokeDashoffset: 1 }} />
+        </svg>
+        {G.items.map((g, i) => (
+          <div className={"gstop reveal " + (i % 2 ? "r-right right" : "r-left")} key={g.id} onClick={() => go(g.id)}>
+            <div className="gcard glass">
+              <div className="gimg"><img src={IMG(g.img)} alt={t(g, lang)} loading="lazy" /></div>
+              <div className="gbody">
+                <div className="gnum">0{i + 1}</div>
+                <h3>{t(g, lang)}</h3>
+                <div className="gen">{lang === "zh" ? g.en : g.zh}</div>
+                <p>{t(g.d, lang)}</p>
+                <span className="glink">{lang === "zh" ? "前往" : "Visit"} <span>→</span></span>
+              </div>
+            </div>
+            <span className="gdot"></span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function Home({ lang, go, openLightbox }) {
@@ -88,7 +150,7 @@ function Home({ lang, go, openLightbox }) {
       </section>
 
       {/* big statement */}
-      <section className="wrap statement">
+      <section className="wrap statement" data-par="1">
         <p className="big reveal r-rise">
           {lang === "zh"
             ? <>四十年來，在流動的<span className="accent">光與色</span>之間，<br />凝視海洋、蝶舞、古文明與萬象之美。</>
@@ -109,7 +171,7 @@ function Home({ lang, go, openLightbox }) {
             const span = [5, 4, 3, 4, 4, 4][i];
             const tall = i === 0;
             return (
-              <div className="tile reveal r-scale" key={id}
+              <div className="tile reveal r-scale r-blur" key={id}
                 style={{ gridColumn: `span ${span}`, aspectRatio: tall ? "4/5" : "4/3", transitionDelay: (i % 3 * 90) + "ms" }}
                 onClick={() => openWork(id)}>
                 <img src={IMG(id)} alt={altWork(wk, lang)} />
@@ -135,7 +197,7 @@ function Home({ lang, go, openLightbox }) {
           title={lang === "zh" ? "六個凝視的方向" : "Six Directions of the Gaze"} lang={lang} />
         <div className="themes">
           {themes.map((c) => (
-            <div className="theme reveal r-scale" key={c.id}
+            <div className="theme reveal r-scale r-blur" key={c.id}
               onClick={() => { window.__worksCat = c.id; go("works"); }}>
               <img src={IMG(THEME_REP[c.id])} alt={(lang === "zh" ? c.zh + " 系列代表作品" : c.en + " series — representative work") + "｜莊明中 Chuang Min-Chung"} loading="lazy" />
               <div className="lab">
@@ -191,6 +253,9 @@ function Home({ lang, go, openLightbox }) {
         </div>
       </section>
 
+      {/* voyage guide — what's on each page */}
+      <VoyageGuide lang={lang} go={go} />
+
       {/* CTA */}
       <section className="section wrap" style={{ paddingTop: 0 }}>
         <div className="glass cta-band reveal">
@@ -212,6 +277,7 @@ function Home({ lang, go, openLightbox }) {
 /* ---------------- ABOUT ---------------- */
 function About({ lang }) {
   useReveal();
+  useParallax();
   const A = window.SITE.about;
   return (
     <div className="page wrap section">
@@ -219,7 +285,7 @@ function About({ lang }) {
         title={lang === "zh" ? "台灣當代藝術的中流砥柱" : "A Pillar of Taiwan's Contemporary Art"} lang={lang} />
       <div className="split">
         <div className="reveal">
-          <div className="portrait-card"><img src={IMG("p39")} alt={lang === "zh" ? "莊明中藝術家肅像" : "Portrait of the artist Chuang Min-Chung"} /></div>
+          <div className="portrait-card reveal r-clip"><img src={IMG("p39")} alt={lang === "zh" ? "莊明中藝術家肅像" : "Portrait of the artist Chuang Min-Chung"} /></div>
           <div className="glass" style={{ padding: 26, marginTop: 18 }}>
             <div className="eyebrow" style={{ marginBottom: 14 }}>{t(A.education.title, lang)}</div>
             <div className="timeline">
@@ -292,7 +358,7 @@ function Works({ lang, openLightbox }) {
       </div>
       <div className="masonry">
         {filtered.map((wk) => (
-          <div className="card reveal" key={wk.img} onClick={() => openLightbox(filtered, filtered.indexOf(wk))}>
+          <div className="card reveal r-blur" key={wk.img} onClick={() => openLightbox(filtered, filtered.indexOf(wk))}>
             <img src={IMG(wk.img)} alt={altWork(wk, lang)} loading="lazy" />
             <div className="overlay">
               <div className="zoom">⤢</div>
@@ -309,6 +375,7 @@ function Works({ lang, openLightbox }) {
 /* ---------------- EXHIBITIONS ---------------- */
 function Exhibitions({ lang, openLightbox }) {
   useReveal();
+  useParallax();
   const E = window.SITE.exhibitions;
   const F = E.featured;
   return (
@@ -317,7 +384,7 @@ function Exhibitions({ lang, openLightbox }) {
         title={lang === "zh" ? "展覽現場" : "On View"} lang={lang} />
 
       <div className="news-feature glass reveal">
-        <div className="poster"><img src={IMG(F.img)} alt={(lang === "zh" ? F.titleZh : F.titleEn) + "｜展覽海報"} /></div>
+        <div className="poster reveal r-clip"><img src={IMG(F.img)} alt={(lang === "zh" ? F.titleZh : F.titleEn) + "｜展覽海報"} data-par="1.2" /></div>
         <div className="body">
           <span className="badge"><span className="dot"></span>{lang === "zh" ? "現正展出" : "Now Showing"}</span>
           <h2>{lang === "zh" ? F.titleZh : F.titleEn}</h2>
@@ -348,7 +415,7 @@ function Exhibitions({ lang, openLightbox }) {
             ))}
           </div>
         </div>
-        <div className="poster" style={{ order: 2 }}><img src={IMG(E.second.img)} alt={(lang === "zh" ? E.second.titleZh : E.second.titleEn) + "｜展覽海報"} /></div>
+        <div className="poster reveal r-clip" style={{ order: 2 }}><img src={IMG(E.second.img)} alt={(lang === "zh" ? E.second.titleZh : E.second.titleEn) + "｜展覽海報"} data-par="-1.2" /></div>
       </div>
 
       {/* crowd / scale gallery */}
@@ -359,7 +426,7 @@ function Exhibitions({ lang, openLightbox }) {
           {E.crowd.map((c, i) => {
             const lbItems = E.crowd.map((x) => ({ img: x.img, zh: x.zh, en: x.en, series: { zh: "展覽現場盛況", en: "Opening Crowds & Scale" }, note: { zh: "", en: "" } }));
             return (
-              <div className={"crowd-card reveal" + (i === 0 ? " lead" : "")} key={c.img}
+              <div className={"crowd-card reveal r-blur" + (i === 0 ? " lead" : "")} key={c.img}
                 onClick={() => openLightbox(lbItems, i)} title={t(c, lang)}>
                 <img src={IMG(c.img)} alt={t(c, lang)} loading="lazy" />
                 <div className="crowd-cap"><span>{t(c, lang)}</span></div>
@@ -409,6 +476,7 @@ function Exhibitions({ lang, openLightbox }) {
 /* ---------------- ACADEMIC ---------------- */
 function Academic({ lang }) {
   useReveal();
+  useParallax();
   const AC = window.SITE.academic;
   return (
     <div className="page wrap section">
@@ -426,8 +494,8 @@ function Academic({ lang }) {
       </div>
 
       {/* wide feature photo (no cramped cropping) */}
-      <div className="acad-feature reveal r-scale">
-        <img src={IMG(AC.feature.img)} alt={lang === "zh" ? AC.feature.capZh : AC.feature.capEn} loading="lazy" />
+      <div className="acad-feature reveal r-clip">
+        <img src={IMG(AC.feature.img)} alt={lang === "zh" ? AC.feature.capZh : AC.feature.capEn} data-par="1.5" loading="lazy" />
         <div className="veil"></div>
         <div className="cap">{lang === "zh" ? AC.feature.capZh : AC.feature.capEn}</div>
       </div>
@@ -471,7 +539,7 @@ function Academic({ lang }) {
           title={t(AC.exchangeTitle, lang)} lead={t(AC.exchangeLead, lang)} lang={lang} />
         <div className="exchange-grid">
           {AC.exchange.map((e, i) => (
-            <div className={"exch-card glass reveal" + (i === 0 ? " feature" : "")} key={i} style={{ transitionDelay: (i % 2 * 80) + "ms" }}>
+            <div className={"exch-card glass reveal r-blur" + (i === 0 ? " feature" : "")} key={i} style={{ transitionDelay: (i % 2 * 80) + "ms" }}>
               <div className="exch-photo">
                 <img src={IMG(e.img)} alt={t(e.title, lang)} loading="lazy" />
               </div>
@@ -575,7 +643,7 @@ function Contact({ lang }) {
           </div>
         </div>
         <div className="reveal">
-          <div className="portrait-card"><img src={IMG(C.img)} alt={lang === "zh" ? "莊明中於工作室進行創作" : "Chuang Min-Chung at work in the studio"} /></div>
+          <div className="portrait-card reveal r-clip"><img src={IMG(C.img)} alt={lang === "zh" ? "莊明中於工作室進行創作" : "Chuang Min-Chung at work in the studio"} /></div>
         </div>
       </div>
     </div>

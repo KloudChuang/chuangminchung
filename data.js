@@ -74,6 +74,34 @@ window.SITE = {
     ]
   },
 
+  guide: {
+    title: { zh:"沿著海流，航向六個篇章", en:"Follow the Current — Six Chapters" },
+    lead: {
+      zh:"這座網站像一片海域，每個分頁是一座島嶼。順著航線，認識藝術家的創作、展覽與更多故事。",
+      en:"This site is a sea, and every page an island. Follow the route to the artist's works, exhibitions and stories."
+    },
+    items: [
+      { id:"about", img:"ph_seaside", zh:"關於藝術家", en:"About",
+        d:{ zh:"從大安海岸的童年到四十年創作航程——認識莊明中的生命歷程與藝術教育理念。",
+            en:"From a childhood on the Da'an coast to forty years of practice — the artist's life and philosophy of art education." } },
+      { id:"works", img:"art20", zh:"作品藝廊", en:"Works",
+        d:{ zh:"海洋蘭嶼、蝶舞花季、鄉土節慶、古文明與蛻變重生——五大系列的線上典藏。",
+            en:"Ocean & Lanyu, butterflies in bloom, folk festivals, ancient worlds and metamorphosis — five series in one gallery." } },
+      { id:"exhibitions", img:"poster_sealight", zh:"展覽現場", en:"Exhibitions",
+        d:{ zh:"現正展出「海底射來的光」2025 油畫創作展，以及歷年個展足跡與現場盛況。",
+            en:"Now showing 'Light from the Sea Floor', alongside past exhibitions and opening crowds." } },
+      { id:"academic", img:"acx_lecture", zh:"學術與評審", en:"Academic",
+        d:{ zh:"全國美展評審、美術館典藏委員、國際研討與藝評選粹——為台灣藝術把關。",
+            en:"National juror, museum acquisition committees, symposia and critical acclaim." } },
+      { id:"collab", img:"art33", zh:"合作洽談", en:"Collaborate",
+        d:{ zh:"作品收藏、展覽策劃、藝術講座、公共藝術、委託創作與授權出版。",
+            en:"Collection, curation, lectures, public art, commissions and licensing." } },
+      { id:"contact", img:"ph_studio", zh:"聯絡我們", en:"Contact",
+        d:{ zh:"與藝術家聯繫，追蹤最新展訊、創作故事與工作室動態。",
+            en:"Reach the artist and follow the latest exhibitions, stories and studio news." } },
+    ]
+  },
+
   works: {
     intro: { zh:"在流動的光與色之間，凝視萬象。", en:"Gazing into all things, between flowing light and colour." },
     cats: [

@@ -14,11 +14,20 @@ function useReveal() {
   useEffect(() => {
     const els = document.querySelectorAll(".reveal:not(.in)");
     const io = new IntersectionObserver(entries => {
+      let k = 0;
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add("in");
-          io.unobserve(e.target);
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        if (!el.style.transitionDelay) {
+          const d = Math.min(k * 80, 480);
+          el.style.transitionDelay = d + "ms";
+          setTimeout(() => {
+            el.style.transitionDelay = "";
+          }, d + 1200);
         }
+        el.classList.add("in");
+        io.unobserve(el);
+        k++;
       });
     }, {
       threshold: 0.12,
@@ -30,6 +39,31 @@ function useReveal() {
 }
 function Ocean() {
   const canvasRef = useRef(null);
+  const depthRef = useRef(null);
+  useEffect(() => {
+    const el = depthRef.current;
+    if (!el) return;
+    let raf = 0;
+    const apply = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      el.style.opacity = (p * 0.55).toFixed(3);
+      raf = 0;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+    window.addEventListener("scroll", onScroll, {
+      passive: true
+    });
+    window.addEventListener("resize", onScroll);
+    apply();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
   useEffect(() => {
     const cv = canvasRef.current;
     if (!cv) return;
@@ -37,11 +71,66 @@ function Ocean() {
     let w, h, raf;
     const motes = [];
     const N = 46;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     function resize() {
       w = cv.width = window.innerWidth;
       h = cv.height = window.innerHeight;
     }
     resize();
+    const WAVES = [{
+      y: .56,
+      amp: 24,
+      len: 1150,
+      sp: .00028,
+      amp2: 9,
+      len2: 430,
+      sp2: -.00046,
+      col: "150,210,235",
+      a: .055,
+      ht: 170
+    }, {
+      y: .68,
+      amp: 32,
+      len: 1550,
+      sp: .00020,
+      amp2: 12,
+      len2: 540,
+      sp2: .00034,
+      col: "250,210,140",
+      a: .048,
+      ht: 210
+    }, {
+      y: .81,
+      amp: 40,
+      len: 1950,
+      sp: .00014,
+      amp2: 15,
+      len2: 660,
+      sp2: -.00024,
+      col: "150,210,235",
+      a: .042,
+      ht: 250
+    }];
+    const waveY = (wv, x, tm) => h * wv.y + Math.sin(x * (Math.PI * 2 / wv.len) + tm * wv.sp) * wv.amp + Math.sin(x * (Math.PI * 2 / wv.len2) + tm * wv.sp2) * wv.amp2;
+    function drawWaves(tm) {
+      for (const wv of WAVES) {
+        ctx.beginPath();
+        ctx.moveTo(-24, waveY(wv, -24, tm));
+        for (let x = -24; x <= w + 24; x += 10) ctx.lineTo(x, waveY(wv, x, tm));
+        ctx.strokeStyle = `rgba(${wv.col},${wv.a * 1.6})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        const top = h * wv.y - wv.amp - wv.amp2;
+        const grd = ctx.createLinearGradient(0, top, 0, top + wv.ht);
+        grd.addColorStop(0, `rgba(${wv.col},${wv.a})`);
+        grd.addColorStop(1, `rgba(${wv.col},0)`);
+        ctx.lineTo(w + 24, top + wv.ht);
+        ctx.lineTo(-24, top + wv.ht);
+        ctx.closePath();
+        ctx.fillStyle = grd;
+        ctx.fill();
+      }
+    }
     for (let i = 0; i < N; i++) {
       motes.push({
         x: Math.random() * w,
@@ -56,6 +145,7 @@ function Ocean() {
     }
     function draw(tm) {
       ctx.clearRect(0, 0, w, h);
+      drawWaves(tm);
       for (const m of motes) {
         m.y -= m.sp;
         m.ph += 0.01;
@@ -73,7 +163,7 @@ function Ocean() {
         ctx.arc(x, m.y, m.r * 4, 0, Math.PI * 2);
         ctx.fill();
       }
-      raf = requestAnimationFrame(draw);
+      if (!reduceMotion) raf = requestAnimationFrame(draw);
     }
     raf = requestAnimationFrame(draw);
     window.addEventListener("resize", resize);
@@ -127,6 +217,9 @@ function Ocean() {
     ref: canvasRef
   }), React.createElement("div", {
     className: "vig"
+  }), React.createElement("div", {
+    className: "depth",
+    ref: depthRef
   }));
 }
 function Nav({
@@ -136,9 +229,34 @@ function Nav({
   setLang
 }) {
   const [open, setOpen] = useState(false);
+  const [hid, setHid] = useState(false);
+  const barRef = useRef(null);
   const S = window.SITE;
+  useEffect(() => {
+    let lastY = window.scrollY,
+      raf = 0;
+    const apply = () => {
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (barRef.current) barRef.current.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
+      if (y > lastY + 4 && y > 180) setHid(true);else if (y < lastY - 4 || y <= 180) setHid(false);
+      lastY = y;
+      raf = 0;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+    window.addEventListener("scroll", onScroll, {
+      passive: true
+    });
+    apply();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
   return React.createElement("header", {
-    className: "nav"
+    className: "nav" + (hid && !open ? " hid" : "")
   }, React.createElement("div", {
     className: "wrap nav-inner"
   }, React.createElement("div", {
@@ -167,7 +285,10 @@ function Nav({
     className: "menu-btn",
     onClick: () => setOpen(!open),
     "aria-label": "menu"
-  }, open ? "✕" : "☰")));
+  }, open ? "✕" : "☰")), React.createElement("span", {
+    className: "nav-progress",
+    ref: barRef
+  }));
 }
 function Footer({
   lang,
@@ -334,10 +455,12 @@ Object.assign(window, {
 });
 function useParallax() {
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let raf = 0;
     const apply = () => {
       const els = document.querySelectorAll("[data-par]");
       const vh = window.innerHeight;
+      const damp = window.innerWidth < 760 ? 0.45 : 1;
       els.forEach(el => {
         const r = el.getBoundingClientRect();
         const center = r.top + r.height / 2;
@@ -345,7 +468,7 @@ function useParallax() {
         if (off > 1.4) off = 1.4;
         if (off < -1.4) off = -1.4;
         const sp = parseFloat(el.getAttribute("data-par")) || 0;
-        el.style.transform = `translate3d(0, ${(-off * sp * 26).toFixed(1)}px, 0)`;
+        el.style.transform = `translate3d(0, ${(-off * sp * 26 * damp).toFixed(1)}px, 0)`;
       });
       raf = 0;
     };
