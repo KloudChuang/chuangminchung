@@ -5,11 +5,13 @@ const {
   useRef: uR
 } = React;
 const THEME_REP = {
+  early: "inv003",
   ocean: "art18",
   butterfly: "art12",
   folk: "art42",
   ancient: "art57",
-  rebirth: "art01"
+  rebirth: "art01",
+  light: "inv161"
 };
 const MARQUEE_A = ["art18", "art12", "art42", "art33", "art20", "art04", "art29", "art13"];
 const MARQUEE_B = ["art30", "art22", "art47", "art39", "art17", "art09", "art40", "art57"];
@@ -297,7 +299,7 @@ function Home({
     }
   }, React.createElement(SectionHead, {
     eyebrow: lang === "zh" ? "創作主題 · Series" : "Series",
-    title: lang === "zh" ? "六個凝視的方向" : "Six Directions of the Gaze",
+    title: lang === "zh" ? "七個凝視的方向" : "Seven Directions of the Gaze",
     lang: lang
   }), React.createElement("div", {
     className: "themes"
@@ -543,11 +545,30 @@ function Works({
   useReveal();
   const W = window.SITE.works;
   const [cat, setCat] = uS(window.__worksCat || "all");
+  const [sort, setSort] = uS("featured");
   uE(() => {
     window.__worksCat = null;
   }, []);
   const items = W.items;
+  const yrNum = w => {
+    const m = String(w.yr || "").match(/\d{4}/);
+    return m ? +m[0] : -Infinity;
+  };
+  const sorts = [{
+    id: "featured",
+    zh: "精選",
+    en: "Featured"
+  }, {
+    id: "new",
+    zh: "新 → 舊",
+    en: "Newest"
+  }, {
+    id: "old",
+    zh: "舊 → 新",
+    en: "Oldest"
+  }];
   const filtered = cat === "all" ? items : items.filter(i => i.cat === cat);
+  const shown = sort === "featured" ? filtered : [...filtered].sort((a, b) => sort === "new" ? yrNum(b) - yrNum(a) : yrNum(a) - yrNum(b));
   return React.createElement("div", {
     className: "page wrap section"
   }, React.createElement(SectionHead, {
@@ -564,11 +585,19 @@ function Works({
   }, t(c, lang), React.createElement("span", {
     className: "en"
   }, lang === "zh" ? c.en : c.zh)))), React.createElement("div", {
+    className: "sortbar reveal"
+  }, React.createElement("span", {
+    className: "lab"
+  }, lang === "zh" ? "排序" : "Sort"), sorts.map(s => React.createElement("button", {
+    key: s.id,
+    className: "sortbtn" + (sort === s.id ? " active" : ""),
+    onClick: () => setSort(s.id)
+  }, t(s, lang)))), React.createElement("div", {
     className: "masonry"
-  }, filtered.map(wk => React.createElement("div", {
+  }, shown.map(wk => React.createElement("div", {
     className: "card reveal r-blur",
     key: wk.img,
-    onClick: () => openLightbox(filtered, filtered.indexOf(wk))
+    onClick: () => openLightbox(shown, shown.indexOf(wk))
   }, React.createElement("img", {
     src: IMG(wk.img),
     alt: altWork(wk, lang),

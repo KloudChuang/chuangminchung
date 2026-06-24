@@ -4,7 +4,7 @@
 const { useState: uS, useEffect: uE, useRef: uR } = React;
 
 /* ---------------- HOME ---------------- */
-const THEME_REP = { ocean: "art18", butterfly: "art12", folk: "art42", ancient: "art57", rebirth: "art01" };
+const THEME_REP = { early: "inv003", ocean: "art18", butterfly: "art12", folk: "art42", ancient: "art57", rebirth: "art01", light: "inv161" };
 const MARQUEE_A = ["art18", "art12", "art42", "art33", "art20", "art04", "art29", "art13"];
 const MARQUEE_B = ["art30", "art22", "art47", "art39", "art17", "art09", "art40", "art57"];
 
@@ -194,7 +194,7 @@ function Home({ lang, go, openLightbox }) {
       <section className="section wrap" style={{ paddingTop: 0 }}>
         <SectionHead
           eyebrow={lang === "zh" ? "創作主題 · Series" : "Series"}
-          title={lang === "zh" ? "六個凝視的方向" : "Six Directions of the Gaze"} lang={lang} />
+          title={lang === "zh" ? "七個凝視的方向" : "Seven Directions of the Gaze"} lang={lang} />
         <div className="themes">
           {themes.map((c) => (
             <div className="theme reveal r-scale r-blur" key={c.id}
@@ -342,9 +342,18 @@ function Works({ lang, openLightbox }) {
   useReveal();
   const W = window.SITE.works;
   const [cat, setCat] = uS(window.__worksCat || "all");
+  const [sort, setSort] = uS("featured");
   uE(() => { window.__worksCat = null; }, []);
   const items = W.items;
+  const yrNum = (w) => { const m = String(w.yr || "").match(/\d{4}/); return m ? +m[0] : -Infinity; };
+  const sorts = [
+    { id: "featured", zh: "精選", en: "Featured" },
+    { id: "new", zh: "新 → 舊", en: "Newest" },
+    { id: "old", zh: "舊 → 新", en: "Oldest" },
+  ];
   const filtered = cat === "all" ? items : items.filter((i) => i.cat === cat);
+  const shown = sort === "featured" ? filtered
+    : [...filtered].sort((a, b) => sort === "new" ? yrNum(b) - yrNum(a) : yrNum(a) - yrNum(b));
   return (
     <div className="page wrap section">
       <SectionHead eyebrow={lang === "zh" ? "作品 · Works" : "Works"}
@@ -356,9 +365,17 @@ function Works({ lang, openLightbox }) {
           </button>
         ))}
       </div>
+      <div className="sortbar reveal">
+        <span className="lab">{lang === "zh" ? "排序" : "Sort"}</span>
+        {sorts.map((s) => (
+          <button key={s.id} className={"sortbtn" + (sort === s.id ? " active" : "")} onClick={() => setSort(s.id)}>
+            {t(s, lang)}
+          </button>
+        ))}
+      </div>
       <div className="masonry">
-        {filtered.map((wk) => (
-          <div className="card reveal r-blur" key={wk.img} onClick={() => openLightbox(filtered, filtered.indexOf(wk))}>
+        {shown.map((wk) => (
+          <div className="card reveal r-blur" key={wk.img} onClick={() => openLightbox(shown, shown.indexOf(wk))}>
             <img src={IMG(wk.img)} alt={altWork(wk, lang)} loading="lazy" />
             <div className="overlay">
               <div className="zoom">⤢</div>

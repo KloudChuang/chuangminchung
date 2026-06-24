@@ -240,6 +240,13 @@ h2.title{ font-size:clamp(28px,3.8vw,46px); letter-spacing:.05em; color:var(--fo
 .chip .en{ font-family:var(--display); font-size:10px; letter-spacing:.16em; text-transform:uppercase; margin-left:8px; opacity:.55; }
 .chip:hover{ color:var(--foam); border-color:var(--hairline-strong); }
 .chip.active{ color:var(--ink); background:linear-gradient(135deg,var(--gold),var(--cyan)); border-color:transparent; }
+.filters{ margin-bottom:14px; }
+.sortbar{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 34px; }
+.sortbar .lab{ font-family:var(--display); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--text-dim); opacity:.7; margin-right:4px; }
+.sortbtn{ background:transparent; border:1px solid var(--hairline); color:var(--text-dim); cursor:pointer;
+  padding:6px 14px; border-radius:999px; font-family:var(--serif); font-size:13px; letter-spacing:.04em; transition:all .3s var(--ease); }
+.sortbtn:hover{ color:var(--foam); border-color:var(--hairline-strong); }
+.sortbtn.active{ color:var(--ink); background:linear-gradient(135deg,var(--gold),var(--cyan)); border-color:transparent; }
 
 .masonry{ columns:3; column-gap:18px; }
 .masonry .card{ break-inside:avoid; margin-bottom:18px; position:relative; border-radius:14px; overflow:hidden;
