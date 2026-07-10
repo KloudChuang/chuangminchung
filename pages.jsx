@@ -168,11 +168,11 @@ function Home({ lang, go, openLightbox }) {
         <div className="featured-strip">
           {featured.map((id, i) => {
             const wk = byImg(id);
-            const span = [5, 4, 3, 4, 4, 4][i];
-            const tall = i === 0;
+            const colSpan = [8, 4, 4, 4, 4, 4][i];   // tile 0 is the hero
+            const rowSpan = i === 0 ? 2 : 1;
             return (
               <div className="tile reveal r-scale r-blur" key={id}
-                style={{ gridColumn: `span ${span}`, aspectRatio: tall ? "4/5" : "4/3", transitionDelay: (i % 3 * 90) + "ms" }}
+                style={{ gridColumn: `span ${colSpan}`, gridRow: `span ${rowSpan}`, transitionDelay: (i % 3 * 90) + "ms" }}
                 onClick={() => openWork(id)}>
                 <img src={IMG(id)} alt={altWork(wk, lang)} />
                 <div className="cap">
