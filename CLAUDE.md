@@ -51,6 +51,9 @@ Everything runs in the **global scope** — there are no `import`/`export`/modul
 
 - **Change any text / add an artwork's metadata** → edit `window.SITE` in `data.js`. Keep the `{ zh, en }` shape; missing `en` silently falls back to `zh`.
 - **Add an artwork image** → drop a `.webp` into `assets/art/` named `<id>.webp`, then reference that `<id>` in `data.js` (e.g. `{ img: "art60", cat: "ocean", ... }`). The `cat` must match one of `works.cats[].id`; `THEME_REP`/`MARQUEE_A`/`MARQUEE_B` at the top of `pages.jsx` and `SITE.guide.items[].img` also reference art ids for the home page.
+  - **Two id namespaces**: `art##` are the original curated works; `inv###` are works imported from the 2025 `莊明中數位美術館清冊.docx` inventory (### = its source table row). Both live in `assets/art/`; pick the right prefix when adding more from either source. See the repo-root `CLAUDE.md` for the docx ingest pipeline.
+- **Add a works category (theme)** → add `{ id, zh, en }` to `works.cats` in `data.js`, **and** add a representative art id to `THEME_REP` in `pages.jsx` for that `id` — every non-`all` cat is rendered as a Home "Series" tile via `IMG(THEME_REP[c.id])`, so a missing entry shows a broken tile. Also bump the hardcoded theme-count heading in `Works`/the Home showcase ("Seven Directions of the Gaze" / "七個凝視的方向"). Current themes: `early, ocean, butterfly, folk, ancient, rebirth, light`.
+- **Works gallery sort** → the `Works` component has a client-side sort control (`featured` = `data.js` array order, `new`/`old` = by `yr`, parsed as the first 4-digit run). Sorting acts within the active category filter and feeds the same array into `openLightbox`, so prev/next follow the sorted order.
 - **Add a route** → add a `{ id, zh, en }` entry to `SITE.nav`, write the page component in `pages.jsx`, and register it in the `pages` map in `app.jsx`.
 
 Any edit to a `.jsx` file requires `npm run build` before it takes effect (and before pushing). Edits to `data.js` do not.
